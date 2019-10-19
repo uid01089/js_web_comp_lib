@@ -1,4 +1,4 @@
-import { AbstractReducer } from '../../lib/AbstractReducer.js';
+import { AbstractReducer } from '../../js_web_comp_lib/AbstractReducer.js';
 import { Action } from 'redux';
 import { State } from '../../ReduxStore';
 
