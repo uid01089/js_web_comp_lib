@@ -1,28 +1,22 @@
-import { reduxStoreInstance, ReduxStore } from '../ReduxStore';
+import { AbstractReduxStore } from './AbstractReduxStore';
 import { Action } from 'redux';
-import { State } from '../ReduxStore';
-import { Util } from './Util';
 
 
 
 
-class AbstractReducer {
-    _store: ReduxStore;
-    constructor() {
-        this._store = reduxStoreInstance;
+
+class AbstractReducer<STATE> {
+    protected store: AbstractReduxStore<STATE>;
+    constructor(store: AbstractReduxStore<STATE>) {
+        this.store = store;
     }
 
-    reducer(state: State, action: Action): State {
+    reducer(state: STATE, action: Action): STATE {
         console.error("reducer not overwritten");
         return state;
     }
 
-    static copyInstance(original) {
 
-        return Util.cloneObject(original);
-
-
-    }
 }
 
 export { AbstractReducer, Action };

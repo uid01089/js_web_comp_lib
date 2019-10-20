@@ -10,16 +10,16 @@ import thunk from 'redux-thunk';
 import { AbstractReducer } from './AbstractReducer';
 
 
-class AbstractReduxStore<State>{
+class AbstractReduxStore<STATE>{
 
-    _reducers: Map<String, AbstractReducer>;
+    private reducerDictionary: Map<String, AbstractReducer<STATE>>;
     store: any;
 
 
     constructor() {
     }
 
-    _coreReducer(state: State, action: Action, reduxStoreInstance): State {
+    private basicReducer(state: STATE, action: Action, reduxStoreInstance): STATE {
         var runningState = state;
 
         reduxStoreInstance._reducers.forEach(reducerClass => {
@@ -29,31 +29,51 @@ class AbstractReduxStore<State>{
         return runningState;
     }
 
-    initReduxStore(initiateState: State) {
+    /**
+     * Initialize Reducer Store
+     * @param initiateState 
+     */
+    initReduxStore(initiateState: STATE) {
         const self = this;
-        this._reducers = new Map();
-        this.store = createStore<State, Action, {}, {}>((state: State = initiateState, action: Action) => {
-            return this._coreReducer(state, action, self)
+        this.reducerDictionary = new Map();
+        this.store = createStore<STATE, Action, {}, {}>((state: STATE = initiateState, action: Action) => {
+            return this.basicReducer(state, action, self)
         },
             applyMiddleware(thunk));
     }
 
-    registerReducer(reducerInstance: AbstractReducer) {
+    /**
+     * Register reducer
+     * @param reducerInstance 
+     */
+    registerReducer(reducerInstance: AbstractReducer<any>) {
         var className = reducerInstance.constructor.name;
-        if (!this._reducers.has(className)) {
-            this._reducers.set(className, reducerInstance);
+        if (!this.reducerDictionary.has(className)) {
+            this.reducerDictionary.set(className, reducerInstance);
         }
     }
 
 
+    /**
+     * dispatch action
+     * @param action 
+     */
     dispatch(action) {
         this.store.dispatch(action);
     }
 
+    /**
+     * Subscribe listeners
+     * @param listener 
+     */
     subscribe(listener): Function {
         return this.store.subscribe(listener);
     }
-    getState(): State {
+
+    /**
+     * Returns the state
+     */
+    getState(): STATE {
         return this.store.getState();
     }
 }

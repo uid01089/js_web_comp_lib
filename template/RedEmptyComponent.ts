@@ -1,11 +1,13 @@
 import { AbstractReducer } from '../../js_web_comp_lib/AbstractReducer.js';
 import { Action } from 'redux';
-import { State } from '../../ReduxStore';
+import { reduxStoreInstance, State } from '../../ReduxStore';
 
 
-class RedEmptyComponent extends AbstractReducer {
+
+
+class RedEmptyComponent extends AbstractReducer<State> {
     constructor() {
-        super();
+        super(reduxStoreInstance);
     }
     reducer(state: State, action: Action): State {
 

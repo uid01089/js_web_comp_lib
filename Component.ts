@@ -1,9 +1,21 @@
 
 
+/**
+ * It is the base class for all web components. 
+ * See https://developers.google.com/web/fundamentals/web-components
+ * 
+ */
 abstract class Component extends HTMLElement {
+
+    /**
+     * An instance of the element is created or upgraded. Useful for initializing state, 
+     * setting up event listeners, or creating a shadow dom. See the spec for restrictions 
+     * on what you can do in the constructor.
+     */
     constructor() {
         super();
 
+        // To use Shadow DOM in a custom element, call this.attachShadow inside your constructor
         this.attachShadow({ mode: 'open' }).appendChild(this.getTemplateElement().content.cloneNode(true));
 
     }
@@ -19,17 +31,28 @@ abstract class Component extends HTMLElement {
         this.registerCallBack();
     }
 
+    /**
+     * Called every time the element is inserted into the DOM. Useful for running setup code, 
+     * such as fetching resources or rendering. Generally, you should try to delay work until 
+     * this time.
+     */
     connectedCallback() {
         this.registerCallBack();
 
     }
 
+    /**
+     * Called every time the element is removed from the DOM. Useful for running clean up code.
+     */
     disconnectedCallback() {
-        //console.log('Custom square element removed from page.');
+
     }
 
+    /**
+     * The custom element has been moved into a new document (e.g. someone called document.adoptNode(el)).
+     */
     adoptedCallback() {
-        //console.log('Custom square element moved to new page.');
+
     }
 
     private getTemplateElement(): HTMLTemplateElement {
@@ -37,6 +60,7 @@ abstract class Component extends HTMLElement {
         template.innerHTML = this.getHTML();
         return template;
     }
+
     /**
      * Returns the HTML from which a template shall be created
      */
