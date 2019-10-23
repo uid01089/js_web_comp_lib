@@ -19,10 +19,10 @@ class AbstractReduxStore<STATE>{
     constructor() {
     }
 
-    private basicReducer(state: STATE, action: Action, reduxStoreInstance): STATE {
+    private basicReducer(state: STATE, action: Action, reduxStoreInstance: AbstractReduxStore<any>): STATE {
         var runningState = state;
 
-        reduxStoreInstance._reducers.forEach(reducerClass => {
+        reduxStoreInstance.reducerDictionary.forEach(reducerClass => {
             runningState = reducerClass.reducer(runningState, action);
         });
 
