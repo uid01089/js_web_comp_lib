@@ -10,7 +10,11 @@ import thunk from 'redux-thunk';
 import { AbstractReducer } from './AbstractReducer';
 
 
-class AbstractReduxStore<STATE>{
+interface AbstractState {
+    action: string
+}
+
+class AbstractReduxStore<STATE extends AbstractState>{
 
     private reducerDictionary: Map<String, AbstractReducer<STATE>>;
     store: any;
@@ -78,4 +82,4 @@ class AbstractReduxStore<STATE>{
     }
 }
 
-export { AbstractReduxStore };
+export { AbstractReduxStore, AbstractState };
