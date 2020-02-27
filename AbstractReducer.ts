@@ -1,18 +1,18 @@
-import { AbstractReduxStore } from './AbstractReduxStore';
+import { AbstractReduxStore, AbstractState } from './AbstractReduxStore';
 import { Action } from 'redux';
 
 
 
 
 
-class AbstractReducer<STATE> {
+class AbstractReducer<STATE extends AbstractState> {
     protected store: AbstractReduxStore<STATE>;
     constructor(store: AbstractReduxStore<STATE>) {
         this.store = store;
     }
 
     reducer(state: STATE, action: Action): STATE {
-        console.error("reducer not overwritten");
+        state.action = action.type;
         return state;
     }
 

@@ -17,9 +17,12 @@ class EmptyComponentReducer extends AbstractReducer<State> {
 
 class EmptyElement extends ReduxComponent<State> {
 
+    reducer: EmptyComponentReducer;
 
     constructor() {
+        var reducer = new EmptyComponentReducer();
         super(new EmptyComponentReducer(), reduxStoreInstance);
+        this.reducer = reducer;
 
     }
 

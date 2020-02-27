@@ -84,9 +84,9 @@ abstract class Component extends HTMLElement {
             result += literals[i];
             if ((typeof placeholders[i] !== 'undefined') && (placeholders[i] != null)) {
                 result += placeholders[i]
-                    .replace(/&/g, '&amp;')
-                    //.replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;')
+                //.replace(/&/g, '&amp;')
+                //.replace(/"/g, '&quot;')
+                //.replace(/'/g, '&#39;')
                 //.replace(/</g, '&lt;')
                 //.replace(/>/g, '&gt;');
             } else {

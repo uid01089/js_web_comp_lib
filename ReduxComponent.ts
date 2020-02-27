@@ -1,19 +1,19 @@
 import { Component } from "./Component";
 import { AbstractReducer } from "./AbstractReducer";
-import { AbstractReduxStore } from "./AbstractReduxStore"
+import { AbstractReduxStore, AbstractState } from "./AbstractReduxStore"
 
 /**
  * Component with Redux 
  */
-abstract class ReduxComponent<STATE> extends Component {
+abstract class ReduxComponent<STATE extends AbstractState> extends Component {
 
-    reducer: AbstractReducer<STATE>;
+    private abstractReducer: AbstractReducer<STATE>;
     reduxListenerUnsubscribe: Function;
 
     constructor(reducer: AbstractReducer<STATE>, reduxStore: AbstractReduxStore<STATE>) {
         super();
 
-        this.reducer = reducer;
+        this.abstractReducer = reducer;
 
         // Register this operation in the Redux
         reduxStore.registerReducer(reducer);
