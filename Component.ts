@@ -27,6 +27,7 @@ abstract class Component extends HTMLElement {
      */
     update() {
 
+        this.unRegisterCallBack();
         this.shadowRoot.innerHTML = this.getHTML();
         this.registerCallBack();
     }
@@ -45,7 +46,7 @@ abstract class Component extends HTMLElement {
      * Called every time the element is removed from the DOM. Useful for running clean up code.
      */
     disconnectedCallback() {
-
+        this.unRegisterCallBack();
     }
 
     /**
@@ -74,6 +75,16 @@ abstract class Component extends HTMLElement {
     registerCallBack() {
 
     }
+
+    /**
+ *
+ *
+ * @memberof Component
+ */
+    unRegisterCallBack() {
+
+    }
+
 
 
     static html(literals: TemplateStringsArray, ...placeholders: string[]): string {
