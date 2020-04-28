@@ -1,6 +1,6 @@
 class Util {
 
-    public static cloneObject(obj: Object) {
+    public static cloneObject<T>(obj: T): T {
         var clone = Object.create(Object.getPrototypeOf(obj));
 
         for (var i in obj) {
