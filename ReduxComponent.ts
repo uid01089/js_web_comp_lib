@@ -2,6 +2,9 @@ import { Component } from "./Component";
 import { AbstractReducer } from "./AbstractReducer";
 import { AbstractReduxStore, AbstractState } from "./AbstractReduxStore"
 
+
+type ReduxListenerUnsubsribeType = () => void;
+
 /**
  * Component with Redux 
  */
@@ -27,7 +30,7 @@ abstract class ReduxComponent<STATE extends AbstractState> extends Component {
      * This operation is called by Redux
      * @param reduxStore 
      */
-    triggeredFromRedux(reduxStore: AbstractReduxStore<STATE>) {
+    triggeredFromRedux(reduxStore: AbstractReduxStore<STATE>): void {
 
         // If not connected anymore, unsubscribe from store
         if (!this.isConnected) {

@@ -16,7 +16,7 @@ interface AbstractState {
 
 class AbstractReduxStore<STATE extends AbstractState>{
 
-    private reducerDictionary: Map<String, AbstractReducer<STATE>>;
+    private reducerDictionary: Map<string, AbstractReducer<STATE>>;
     store: any;
 
 
@@ -24,7 +24,7 @@ class AbstractReduxStore<STATE extends AbstractState>{
     }
 
     private basicReducer(state: STATE, action: Action, reduxStoreInstance: AbstractReduxStore<any>): STATE {
-        var runningState = state;
+        let runningState = state;
 
         reduxStoreInstance.reducerDictionary.forEach(reducerClass => {
             runningState = reducerClass.reducer(runningState, action);
@@ -37,7 +37,7 @@ class AbstractReduxStore<STATE extends AbstractState>{
      * Initialize Reducer Store
      * @param initiateState 
      */
-    initReduxStore(initiateState: STATE) {
+    initReduxStore(initiateState: STATE): void {
         const self = this;
         this.reducerDictionary = new Map();
         this.store = createStore<STATE, Action, {}, {}>((state: STATE = initiateState, action: Action) => {
@@ -50,8 +50,8 @@ class AbstractReduxStore<STATE extends AbstractState>{
      * Register reducer
      * @param reducerInstance 
      */
-    registerReducer(reducerInstance: AbstractReducer<any>) {
-        var className = reducerInstance.constructor.name;
+    registerReducer(reducerInstance: AbstractReducer<any>): void {
+        const className = reducerInstance.constructor.name;
         if (!this.reducerDictionary.has(className)) {
             this.reducerDictionary.set(className, reducerInstance);
         }
@@ -62,7 +62,7 @@ class AbstractReduxStore<STATE extends AbstractState>{
      * dispatch action
      * @param action 
      */
-    dispatch(action) {
+    dispatch(action): void {
         this.store.dispatch(action);
     }
 
@@ -70,7 +70,7 @@ class AbstractReduxStore<STATE extends AbstractState>{
      * Subscribe listeners
      * @param listener 
      */
-    subscribe(listener): Function {
+    subscribe(listener: Function): Function {
         return this.store.subscribe(listener);
     }
 
