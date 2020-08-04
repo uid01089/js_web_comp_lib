@@ -14,13 +14,14 @@ interface AbstractState {
     action: string
 }
 
-class AbstractReduxStore<STATE extends AbstractState>{
+abstract class AbstractReduxStore<STATE extends AbstractState>{
 
     private reducerDictionary: Map<string, AbstractReducer<STATE>>;
     store: any;
 
 
     constructor() {
+        // Do nothing
     }
 
     private basicReducer(state: STATE, action: Action, reduxStoreInstance: AbstractReduxStore<any>): STATE {
@@ -30,8 +31,23 @@ class AbstractReduxStore<STATE extends AbstractState>{
             runningState = reducerClass.reducer(runningState, action);
         });
 
+        this.finalReducer(runningState, action);
+
         return runningState;
     }
+
+    /**
+     * finalReducer have to be implemented by the refined Class. 
+     * It is the last reducer which is called.
+     * Within this operation save operation can be performed
+     *
+     * @abstract
+     * @param {STATE} state
+     * @param {Action<any>} action
+     * @memberof AbstractReduxStore
+     */
+    abstract finalReducer(state: STATE, action: Action<any>): void;
+
 
     /**
      * Initialize Reducer Store
