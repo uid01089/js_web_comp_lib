@@ -7,8 +7,5 @@
     "repository": {
         "url": "https://github.com/uid01089/js_web_comp_lib"
     },
-    "dependencies": {
-        "redux": "^4.0.5",
-        "redux-thunk": "^2.3.0"
-    }
+    "dependencies": {}
 }
