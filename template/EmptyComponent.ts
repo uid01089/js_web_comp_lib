@@ -20,7 +20,7 @@ class EmptyElement extends ReduxComponent<State> {
 
     constructor() {
         const reducer = new EmptyComponentReducer();
-        super(new EmptyComponentReducer(), reduxStoreInstance);
+        super(reducer, reduxStoreInstance);
         this.reducer = reducer;
 
     }
