@@ -1,9 +1,8 @@
 import { ReduxComponent } from '../ReduxComponent';
-import { Action } from 'redux';
 import { reduxStoreInstance, State } from '../../ReduxStore';
 import { CSS } from '../../Css';
 import { AbstractReduxStore } from '../AbstractReduxStore';
-import { AbstractReducer } from '../AbstractReducer';
+import { AbstractReducer, Action } from '../AbstractReducer';
 
 class EmptyComponentReducer extends AbstractReducer<State> {
     constructor() {
