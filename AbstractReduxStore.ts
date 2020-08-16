@@ -93,7 +93,7 @@ abstract class AbstractReduxStore<STATE extends AbstractState>{
     }
 
 
-    dispatch(triggerFct: TriggerFct): void {
+    async dispatch(triggerFct: TriggerFct): Promise<void> {
         triggerFct((action) => {
 
             // Trigger all Reducers, state is modified
@@ -104,10 +104,10 @@ abstract class AbstractReduxStore<STATE extends AbstractState>{
             // Trigger final Reducer, for example serve persistence
             this.finalReducer(this.state, action);
 
-        }).then(() => {
             this.componentDictionary.forEach(componentClass => {
                 componentClass.triggeredFromRedux(this);
-            })
+            });
+
         });
 
 
