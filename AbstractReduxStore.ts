@@ -94,7 +94,7 @@ abstract class AbstractReduxStore<STATE extends AbstractState>{
 
 
     async dispatch(triggerFct: TriggerFct): Promise<void> {
-        triggerFct((action) => {
+        await triggerFct((action) => {
 
             // Trigger all Reducers, state is modified
             this.reducerDictionary.forEach(reducerClass => {
