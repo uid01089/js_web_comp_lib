@@ -25,8 +25,9 @@ abstract class Component extends HTMLElement {
      *
      * @memberof Component
      */
-    update() {
+    update(): void {
 
+        this.unRegisterCallBack();
         this.shadowRoot.innerHTML = this.getHTML();
         this.registerCallBack();
     }
@@ -36,7 +37,7 @@ abstract class Component extends HTMLElement {
      * such as fetching resources or rendering. Generally, you should try to delay work until 
      * this time.
      */
-    connectedCallback() {
+    connectedCallback(): void {
         this.registerCallBack();
 
     }
@@ -44,14 +45,14 @@ abstract class Component extends HTMLElement {
     /**
      * Called every time the element is removed from the DOM. Useful for running clean up code.
      */
-    disconnectedCallback() {
-
+    disconnectedCallback(): void {
+        this.unRegisterCallBack();
     }
 
     /**
      * The custom element has been moved into a new document (e.g. someone called document.adoptNode(el)).
      */
-    adoptedCallback() {
+    adoptedCallback(): void {
 
     }
 
@@ -71,9 +72,19 @@ abstract class Component extends HTMLElement {
      *
      * @memberof Component
      */
-    registerCallBack() {
+    registerCallBack(): void {
 
     }
+
+    /**
+ *
+ *
+ * @memberof Component
+ */
+    unRegisterCallBack(): void {
+
+    }
+
 
 
     static html(literals: TemplateStringsArray, ...placeholders: string[]): string {

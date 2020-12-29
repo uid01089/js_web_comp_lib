@@ -1,25 +1,33 @@
 import { Component } from "./Component";
 import { AbstractReducer } from "./AbstractReducer";
-import { AbstractReduxStore, AbstractState } from "./AbstractReduxStore"
+import { AbstractReduxStore, AbstractState, ReduxComponentIf } from "./AbstractReduxStore"
+
+
+type ReduxListenerUnsubsribeType = () => void;
 
 /**
  * Component with Redux 
  */
-abstract class ReduxComponent<STATE extends AbstractState> extends Component {
+abstract class ReduxComponent<STATE extends AbstractState> extends Component implements ReduxComponentIf {
 
     private abstractReducer: AbstractReducer<STATE>;
-    reduxListenerUnsubscribe: Function;
+    reduxStore: AbstractReduxStore<STATE>;
+
+
 
     constructor(reducer: AbstractReducer<STATE>, reduxStore: AbstractReduxStore<STATE>) {
         super();
 
         this.abstractReducer = reducer;
+        this.reduxStore = reduxStore;
 
         // Register this operation in the Redux
         reduxStore.registerReducer(reducer);
 
-        // Store operation to de-register
-        this.reduxListenerUnsubscribe = reduxStore.subscribe(() => this.triggeredFromRedux(reduxStore));
+        // Register components
+        reduxStore.registerComponent(this);
+
+
 
     }
 
@@ -27,12 +35,22 @@ abstract class ReduxComponent<STATE extends AbstractState> extends Component {
      * This operation is called by Redux
      * @param reduxStore 
      */
-    triggeredFromRedux(reduxStore: AbstractReduxStore<STATE>) {
+    triggeredFromRedux(reduxStore: AbstractReduxStore<STATE>): void {
 
         // If not connected anymore, unsubscribe from store
         if (!this.isConnected) {
             this.reduxListenerUnsubscribe();
         }
+    }
+
+    protected reduxListenerUnsubscribe() {
+
+        // Register this operation in the Redux
+        this.reduxStore.deRegisterReducer(this.abstractReducer);
+
+        // Register components
+        this.reduxStore.deRegisterComponent(this);
+
     }
 }
 

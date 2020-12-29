@@ -1,9 +1,8 @@
 import { ReduxComponent } from '../ReduxComponent';
-import { Action } from 'redux';
 import { reduxStoreInstance, State } from '../../ReduxStore';
 import { CSS } from '../../Css';
 import { AbstractReduxStore } from '../AbstractReduxStore';
-import { AbstractReducer } from '../AbstractReducer';
+import { AbstractReducer, Action } from '../AbstractReducer';
 
 class EmptyComponentReducer extends AbstractReducer<State> {
     constructor() {
@@ -20,8 +19,8 @@ class EmptyElement extends ReduxComponent<State> {
     reducer: EmptyComponentReducer;
 
     constructor() {
-        var reducer = new EmptyComponentReducer();
-        super(new EmptyComponentReducer(), reduxStoreInstance);
+        const reducer = new EmptyComponentReducer();
+        super(reducer, reduxStoreInstance);
         this.reducer = reducer;
 
     }
@@ -31,7 +30,7 @@ class EmptyElement extends ReduxComponent<State> {
      * such as fetching resources or rendering. Generally, you should try to delay work until
      * this time.
      */
-    connectedCallback() {
+    connectedCallback(): void {
         super.connectedCallback();
 
 
@@ -42,10 +41,10 @@ class EmptyElement extends ReduxComponent<State> {
      *
      * @memberof Component
      */
-    registerCallBack() {
+    registerCallBack(): void {
         super.registerCallBack();
 
-        let exampleElement = this.shadowRoot.getElementById("ExampleElement");
+        const exampleElement = this.shadowRoot.getElementById("ExampleElement");
         //exampleElement.addEventListener(
 
         //this.dispatchEvent(new CustomEvent<FileDialogResult>('valueSelected', { detail: { files: files } }));
@@ -56,7 +55,7 @@ class EmptyElement extends ReduxComponent<State> {
     /**
      * Returns the HTML from which a template shall be created
      */
-    getHTML() {
+    getHTML(): string {
 
         return ReduxComponent.html` 
         ${CSS}
@@ -72,7 +71,7 @@ class EmptyElement extends ReduxComponent<State> {
      * This operation is called by Redux
      * @param reduxStore 
      */
-    triggeredFromRedux(reduxStore: AbstractReduxStore<State>) {
+    triggeredFromRedux(reduxStore: AbstractReduxStore<State>): void {
 
         super.triggeredFromRedux(reduxStore);
 
@@ -80,7 +79,7 @@ class EmptyElement extends ReduxComponent<State> {
         // meaning update UI :-)
         switch (reduxStore.getState().action) {
             default:
-        };
+        }
     }
 
 

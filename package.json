@@ -1,0 +1,11 @@
+{
+    "name": "js_web_comp_lib",
+    "description": "Library providing the sceleton of WebComponents",
+    "authors": "Konrad Schmid",
+    "version": "1.0.0",
+    "main": "pathToMain",
+    "repository": {
+        "url": "https://github.com/uid01089/js_web_comp_lib"
+    },
+    "dependencies": {}
+}

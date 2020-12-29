@@ -1,85 +1,129 @@
-import {
-    createStore,
-    compose,
-    applyMiddleware,
-    combineReducers,
-    Action
-} from 'redux';
-import thunk from 'redux-thunk';
 
-import { AbstractReducer } from './AbstractReducer';
+
+import { AbstractReducer, Action } from './AbstractReducer';
+import { Util } from './Util';
+import { reduxStoreInstance } from '../ReduxStore';
 
 
 interface AbstractState {
     action: string
 }
 
-class AbstractReduxStore<STATE extends AbstractState>{
+interface ReduxComponentIf {
+    triggeredFromRedux(reduxStore: AbstractReduxStore<any>): void;
+}
 
-    private reducerDictionary: Map<String, AbstractReducer<STATE>>;
-    store: any;
+type DispatchFct = (action: Action) => void;
+type TriggerFct = (dispatchFct: DispatchFct) => Promise<void>;
+
+abstract class AbstractReduxStore<STATE extends AbstractState>{
+
+
+    private reducerDictionary: Set<AbstractReducer<STATE>>;
+    private componentDictionary: Set<ReduxComponentIf>;
+    private state: STATE;
+
 
 
     constructor() {
+        // Do nothing
     }
 
     private basicReducer(state: STATE, action: Action, reduxStoreInstance: AbstractReduxStore<any>): STATE {
-        var runningState = state;
+        let runningState = state;
 
         reduxStoreInstance.reducerDictionary.forEach(reducerClass => {
             runningState = reducerClass.reducer(runningState, action);
         });
 
+        this.finalReducer(runningState, action);
+
         return runningState;
     }
+
+    /**
+     * finalReducer have to be implemented by the refined Class. 
+     * It is the last reducer which is called.
+     * Within this operation save operation can be performed
+     *
+     * @abstract
+     * @param {STATE} state
+     * @param {Action<any>} action
+     * @memberof AbstractReduxStore
+     */
+    abstract finalReducer(state: STATE, action: Action<any>): void;
+
 
     /**
      * Initialize Reducer Store
      * @param initiateState 
      */
-    initReduxStore(initiateState: STATE) {
-        const self = this;
-        this.reducerDictionary = new Map();
-        this.store = createStore<STATE, Action, {}, {}>((state: STATE = initiateState, action: Action) => {
-            return this.basicReducer(state, action, self)
-        },
-            applyMiddleware(thunk));
+    initReduxStore(initiateState: STATE): void {
+        this.state = Util.cloneObject(initiateState);
+        this.reducerDictionary = new Set();
+        this.componentDictionary = new Set();
+
     }
 
     /**
      * Register reducer
      * @param reducerInstance 
      */
-    registerReducer(reducerInstance: AbstractReducer<any>) {
-        var className = reducerInstance.constructor.name;
-        if (!this.reducerDictionary.has(className)) {
-            this.reducerDictionary.set(className, reducerInstance);
+    registerReducer(reducerInstance: AbstractReducer<STATE>): void {
+        this.reducerDictionary.add(reducerInstance);
+    }
+
+    registerComponent(reduxComponent: ReduxComponentIf): void {
+        this.componentDictionary.add(reduxComponent);
+    }
+
+    deRegisterComponent(reduxComponent: ReduxComponentIf): void {
+        this.componentDictionary.delete(reduxComponent);
+    }
+    deRegisterReducer(reducerInstance: AbstractReducer<STATE>): void {
+        this.reducerDictionary.delete(reducerInstance);
+    }
+
+
+    dispatchAction(action: Action): void {
+        const actionFct = async (dispatch) => {
+            dispatch(action);
         }
+        this.dispatch(actionFct);
     }
 
 
-    /**
-     * dispatch action
-     * @param action 
-     */
-    dispatch(action) {
-        this.store.dispatch(action);
+    async dispatch(triggerFct: TriggerFct): Promise<void> {
+        triggerFct((action) => {
+
+            // Trigger all Reducers, state is modified
+            this.reducerDictionary.forEach(reducerClass => {
+                this.state = reducerClass.reducer(this.state, action);
+            });
+
+            // Trigger final Reducer, for example serve persistence
+            this.finalReducer(this.state, action);
+
+            this.componentDictionary.forEach(componentClass => {
+                componentClass.triggeredFromRedux(this);
+            });
+
+        });
+
+
     }
 
-    /**
-     * Subscribe listeners
-     * @param listener 
-     */
-    subscribe(listener): Function {
-        return this.store.subscribe(listener);
-    }
+
+
+
 
     /**
      * Returns the state
      */
     getState(): STATE {
-        return this.store.getState();
+        return this.state;
     }
 }
 
-export { AbstractReduxStore, AbstractState };
+export { AbstractReduxStore, AbstractState, ReduxComponentIf, DispatchFct, TriggerFct };
+

@@ -1,11 +1,13 @@
 import { AbstractReduxStore, AbstractState } from './AbstractReduxStore';
-import { Action } from 'redux';
+
+
+interface Action<T = string> {
+    type: T
+}
 
 
 
-
-
-class AbstractReducer<STATE extends AbstractState> {
+abstract class AbstractReducer<STATE extends AbstractState> {
     protected store: AbstractReduxStore<STATE>;
     constructor(store: AbstractReduxStore<STATE>) {
         this.store = store;
